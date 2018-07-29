@@ -64,4 +64,40 @@
 
     dispatch))
 
+;;3.5 蒙特卡罗求pi
+;;蒙特卡罗实现
+(define (monte-carlo trials experiment)
+  (define (iter trials-remaining trials-passed)
+    (cond ((= trials-remaining 0)
+           (/ trials-passed trials))
+          ((experiment)
+           (iter (- trials-remaining 1) (+ trials-passed 1)))
+          (else (iter (- trials-remaining 1) trials-passed))))
+  (iter trials 0))
 
+;;在一范围内产生随机值
+(define (random-in-range low high)
+  (let ((rang (- high low)))
+    (+ low (random (exact->inexact rang)))))
+
+;;单次实验结果， 随机生成的点是否在圆内
+        
+;;计算pi
+(define (estimate-integral posion? x1 x2 y1 y2 trials)
+  (* 4 (monte-carlo trials (lambda ()
+                             (posion? (random-in-range x1 x2)
+                                      (random-in-range y1 y2))))))
+
+(define (estimate-pi trials)
+  (exact->inexact (estimate-integral (lambda (x y)
+                                      (< (+ (* x x)
+                                            (* y y))
+                                          1.0))
+                                    -1.0
+                                    1.0
+                                    -1.0
+                                    1.0
+                                    trials)))
+
+    
+                   
