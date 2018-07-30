@@ -80,8 +80,6 @@
   (let ((rang (- high low)))
     (+ low (random (exact->inexact rang)))))
 
-;;单次实验结果， 随机生成的点是否在圆内
-        
 ;;计算pi
 (define (estimate-integral posion? x1 x2 y1 y2 trials)
   (* 4 (monte-carlo trials (lambda ()
@@ -99,5 +97,11 @@
                                     1.0
                                     trials)))
 
-    
-                   
+;;3.6 为随机器生成器增加重置功能
+(define random-init 100)
+(define (rand m)
+  (let ((x random-init))
+      (cond ((eq? m 'generate) (begin (set! x (random x))
+                                      x))
+            ((eq? m 'reset) (lambda (new-value) (set! x new-value))))))
+   
